@@ -47,6 +47,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <rtabmap/core/util2d.h>
 #include <rtabmap/utilite/ULogger.h>
 
+//--------------- my code begin---------------
+#include "GetDirectionFromCloud.h"
+#include <pcl/pcl_base.h>
+#include "rtabmap/core/util3d.h"
+#include <thread>         // std::thread
+#include <mutex>          // std::mutex
+
+volatile float distance(0);
+volatile float direction(0);
+std::mutex mtx;           // locks access to counter
+//--------------- my code end ----------------
+
 using namespace rtabmap;
 
 class RGBDOdometry : public rtabmap_ros::OdometryROS
@@ -203,8 +215,26 @@ public:
 						0,
 						rtabmap_ros::timestampFromROS(stamp));
 
-			 	ROS_ERROR(">>> Here , we should get the sensor data ... ");
+			 	//ROS_ERROR(">>> Here , we should get the sensor data ... ");
 			 	ROS_ERROR(">>> Depth: %d, %d \n", ptrDepth->image.rows, ptrDepth->image.cols);
+
+			 	//UTimer alignTimer;
+				pcl::IndicesPtr indices(new std::vector<int>);
+				//pcl::IndicesPtr ground, obstacles;
+				pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = util3d::cloudFromSensorData(data, 1, 0, 0, indices.get());
+				//cloud = util3d::voxelize(cloud, indices, 0.01);
+				if(cloud->size())
+				{
+					if(mtx.try_lock())
+					{
+						GetDirectionFromCloud gdfc(cloud);
+						direction = gdfc.getMoveDirection();
+						distance =  gdfc.getMoveDistance();
+						std::cout << ">>> direction = " << direction << ", distance = " << distance << std::endl;
+
+						mtx.unlock();
+					}
+				}
 
 			 	//ROS_ERROR(">>> %f", ptrDepth->image.at<float>(110,200));
 			 	//std::cout << ">>> ptrDepth->image(default) = " << std::endl << ptrImage->image << std::endl << std::endl;
@@ -390,18 +420,54 @@ private:
 	int queueSize_;
 };
 
+//---------------my code begin--------------
+void turtlebotMoving( void )
+{
+	while(1)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		if(mtx.try_lock())
+		{
+			if( distance != 0 || direction != 0)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+				std::cout << ">>> turtlebotMoving distance = " << distance <<", direction = " << direction << std::endl;
+
+				distance = 0;
+				direction = 0;
+			}
+			else
+			{
+				std::cout << ">>> distance and direction invalid !" << std::endl;
+			}
+
+			if(threadExit) return;
+
+			mtx.unlock();
+		}
+	}
+}
+//---------------my code end----------------
+
 int main(int argc, char *argv[])
 {
 	ULogger::setType(ULogger::kTypeConsole);
 	ULogger::setLevel(ULogger::kWarning);
 	ros::init(argc, argv, "rgbd_odometry");
-
-	ROS_ERROR(">>> RGBDOdometryNode run ... ");
+//--------------my code begin------------
+	ROS_ERROR(">>> RGBDOdometryNode run ... and create thread");
+	std::thread th = std::thread(turtlebotMoving);
+//--------------my code end--------------
 
 	// process "--params" argument
 	rtabmap_ros::OdometryROS::processArguments(argc, argv);
 
 	RGBDOdometry odom(argc, argv);
 	ros::spin();
+
+//--------------my code begin------------	
+    th.join();
+    std::cout << ">>> turtlebotMoving thread had been join" << std::endl;
+//--------------my code end--------------
 	return 0;
 }

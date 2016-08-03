@@ -71,6 +71,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "rtabmap_ros/MsgConversion.h"
 
+//---------------my code begin----------------
+#include "GetDirectionFromCloud.h"
+//---------------my code end------------------
+
 using namespace rtabmap;
 
 CoreWrapper::CoreWrapper(bool deleteDbOnStart, const ParametersMap & parameters) :
@@ -435,6 +439,10 @@ CoreWrapper::CoreWrapper(bool deleteDbOnStart, const ParametersMap & parameters)
 
 CoreWrapper::~CoreWrapper()
 {
+//------------my code begin------------
+	threadExit = true;
+//------------my code end--------------
+
 	if(transformThread_)
 	{
 		transformThread_->join();

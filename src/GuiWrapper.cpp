@@ -361,7 +361,7 @@ void GuiWrapper::handleEvent(UEvent * anEvent)
 			if(!cameraNodeName_.empty())
 			{
 				std::string str = uFormat("rosrun dynamic_reconfigure dynparam set %s pause true", cameraNodeName_.c_str());
-				system(str.c_str());
+				int res = system(str.c_str());
 			}
 
 			// Pause visual_odometry
@@ -388,7 +388,7 @@ void GuiWrapper::handleEvent(UEvent * anEvent)
 			if(!cameraNodeName_.empty())
 			{
 				std::string str = uFormat("rosrun dynamic_reconfigure dynparam set %s pause false", cameraNodeName_.c_str());
-				system(str.c_str());
+				int res = system(str.c_str());
 			}
 		}
 		else if(cmd == rtabmap::RtabmapEventCmd::kCmdTriggerNewMap)

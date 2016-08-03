@@ -265,6 +265,8 @@ void callback(rtabmap_ros::CameraConfig &config, uint32_t level)
 
 int main(int argc, char** argv)
 {
+	ROS_ERROR("CameraNode ---> main run...");
+
 	ULogger::setType(ULogger::kTypeConsole);
 	//ULogger::setLevel(ULogger::kDebug);
 	ULogger::setEventLevel(ULogger::kWarning);

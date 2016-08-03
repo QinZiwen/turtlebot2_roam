@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(rtabmap_ros)
 
+##----------------my code-----------------
+# 设置用debug还是release模式。debug允许断点，而release更快
+#set( CMAKE_BUILD_TYPE Debug )
+set( CMAKE_BUILD_TYPE Release )
+
+# 设置编译选项
+# 允许c++11标准、O3优化、多线程。match选项可避免一些cpu上的问题
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -march=native -O3 -pthread" )
+##----------------my code-----------------
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -159,6 +169,7 @@ SET(rtabmap_ros_lib_src
    src/nodelets/point_cloud_aggregator.cpp
    src/MsgConversion.cpp
    src/OdometryROS.cpp
+   src/GetDirectionFromCloud.cpp
    src/MapsManager.cpp
 )   
 
@@ -275,6 +286,10 @@ target_link_libraries(map_assembler rtabmap_ros ${Libraries})
 add_executable(camera src/CameraNode.cpp)
 add_dependencies(camera ${${PROJECT_NAME}_EXPORTED_TARGETS})
 target_link_libraries(camera ${Libraries})
+
+add_executable( threadLearn test/threadLearn.cpp)
+
+add_executable( mutexLearn test/mutexLearn.cpp)
 
 IF(RTABMAP_GUI)
     add_executable(rtabmapviz src/GuiNode.cpp src/GuiWrapper.cpp src/PreferencesDialogROS.cpp)

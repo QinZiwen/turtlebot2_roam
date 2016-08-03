@@ -8,6 +8,9 @@
 #include <pcl/common/common.h>
 #include <math.h>
 #include <iostream>
+#include <atomic>
+
+extern std::atomic<bool> threadExit;
 
 class GetDirectionFromCloud
 {

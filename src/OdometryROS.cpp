@@ -550,20 +550,20 @@ void OdometryROS::processData(const SensorData & data, const ros::Time & stamp)
 	/******************
 	 * my code
 	 ******************/
-	UTimer alignTimer;
-	pcl::IndicesPtr indices(new std::vector<int>);
-	pcl::IndicesPtr ground, obstacles;
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = util3d::cloudFromSensorData(data, 1, 0, 0, indices.get());
+	//UTimer alignTimer;
+	//pcl::IndicesPtr indices(new std::vector<int>);
+	//pcl::IndicesPtr ground, obstacles;
+	//pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = util3d::cloudFromSensorData(data, 1, 0, 0, indices.get());
 
-	ROS_ERROR(">>> /home/turtlebot/catkin_ws/src/rtabmap_ros/src/OdometryROS.cpp  would gedit could");
+	//ROS_ERROR(">>> /home/turtlebot/catkin_ws/src/rtabmap_ros/src/OdometryROS.cpp  would gedit could");
 	//cloud = util3d::voxelize(cloud, indices, 0.01);
 
 	//std::cout << ">>> OdometryROS cloud size = " << cloud->size() << std::endl;
-	if(cloud->size())
-	{
+	//if(cloud->size())
+	//{
 		//util3d::segmentObstaclesFromGround<pcl::PointXYZ>(cloud, ground, obstacles, 20, M_PI/4.0f, 0.02, 200, true);
 		//std::cout << ">>> OdometryROS obstacles size = " << obstacles->size() << std::endl;
-	}
+	//}
 	/******************
 	 * my code
 	 ******************/

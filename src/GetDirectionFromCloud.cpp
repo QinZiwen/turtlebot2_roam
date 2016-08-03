@@ -1,5 +1,7 @@
 #include "GetDirectionFromCloud.h"
 
+std::atomic<bool> threadExit(false);
+
 GetDirectionFromCloud::GetDirectionFromCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr &inputCloud)
 {
 	std::cout << ">>> inputCloud size = " << inputCloud->points.size() << std::endl;
