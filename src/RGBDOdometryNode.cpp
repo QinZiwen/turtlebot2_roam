@@ -51,12 +51,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "GetDirectionFromCloud.h"
 #include <pcl/pcl_base.h>
 #include "rtabmap/core/util3d.h"
+#include "turtlebotMove.h"
 #include <thread>         // std::thread
 #include <mutex>          // std::mutex
 
 volatile float distance(0);
 volatile float direction(0);
 std::mutex mtx;           // locks access to counter
+
+move *mv;
 //--------------- my code end ----------------
 
 using namespace rtabmap;
@@ -433,6 +436,9 @@ void turtlebotMoving( void )
 				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 				std::cout << ">>> turtlebotMoving distance = " << distance <<", direction = " << direction << std::endl;
 
+				mv->setDistance(distance);
+  				mv->setAngular(direction);
+
 				distance = 0;
 				direction = 0;
 			}
@@ -455,6 +461,8 @@ int main(int argc, char *argv[])
 	ULogger::setLevel(ULogger::kWarning);
 	ros::init(argc, argv, "rgbd_odometry");
 //--------------my code begin------------
+	mv = new move( argc, argv);
+
 	ROS_ERROR(">>> RGBDOdometryNode run ... and create thread");
 	std::thread th = std::thread(turtlebotMoving);
 //--------------my code end--------------
@@ -465,7 +473,9 @@ int main(int argc, char *argv[])
 	RGBDOdometry odom(argc, argv);
 	ros::spin();
 
-//--------------my code begin------------	
+//--------------my code begin------------
+	delete mv;
+
     th.join();
     std::cout << ">>> turtlebotMoving thread had been join" << std::endl;
 //--------------my code end--------------

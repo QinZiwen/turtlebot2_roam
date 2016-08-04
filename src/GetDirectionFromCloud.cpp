@@ -64,10 +64,12 @@ float GetDirectionFromCloud::getMoveDirection()
 	if(maxPt.x != 0 && maxPt.y != 0)
 	{
 		direction = atan(maxPt.y / maxPt.x);
+		float dir = direction * 3.14159 / 180;
+		direction = dir > 0.3 ? dir : 0.3;
 	}
 	else if(maxPt.x != 0 && maxPt.y == 0)
 	{
-		direction = 0.26;
+		direction = 0.3;
 	}
 	else if(maxPt.x == 0 && maxPt.y != 0)
 	{

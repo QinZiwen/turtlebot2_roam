@@ -171,6 +171,7 @@ SET(rtabmap_ros_lib_src
    src/OdometryROS.cpp
    src/GetDirectionFromCloud.cpp
    src/MapsManager.cpp
+   src/turtlebotMove.cpp
 )   
 
 # If costmap_2d is found, add the plugin
