@@ -12,16 +12,17 @@ GetDirectionFromCloud_v2::GetDirectionFromCloud_v2(pcl::PointCloud<pcl::PointXYZ
 	}
 	else
 	{
-		_diretion = 0.78;
+		_diretion = 1.57;
 		_distance = 0;
 		return;
 	}
 
-	std::cout << "two_object->points.size() = " << two_object->points.size() << std::endl;
+	// std::cout << "two_object->points.size() = " << two_object->points.size() << std::endl;
 
 	if( two_object->points.size() == 0 )
 	{
-		_diretion = 0.78;
+		//_diretion = 0.78;
+        _diretion = 1.57;
 		_distance = 0;
 	}
 	else if(two_object->points.size() == 2)
@@ -43,7 +44,10 @@ GetDirectionFromCloud_v2::GetDirectionFromCloud_v2(pcl::PointCloud<pcl::PointXYZ
 		if( centerY >= 0 )
 		{
 			float angle = atan(minY / minX);
-			_diretion = angle * 3.14159 / 180;
+            if(angle >= 15)
+			    _diretion = angle * 3.14159 / 180;
+             else
+                _diretion = 0;
 		}
 		else if( centerY < 0 )
 		{
@@ -61,15 +65,18 @@ GetDirectionFromCloud_v2::GetDirectionFromCloud_v2(pcl::PointCloud<pcl::PointXYZ
 		float minY_2 = two_object->points[3].y;
 		float maxY_2 = two_object->points[3].z;
 
-		std::cout << " minX_1 = " << minX_1 << ", minY_1 = " << minY_1 << ", maxY_1 = " << maxY_1 << std::endl;
-		std::cout << " minX_2 = " << minX_2 << ", minY_2 = " << minY_2 << ", maxY_2 = " << maxY_2 << std::endl;
+		// std::cout << " minX_1 = " << minX_1 << ", minY_1 = " << minY_1 << ", maxY_1 = " << maxY_1 << std::endl;
+		// std::cout << " minX_2 = " << minX_2 << ", minY_2 = " << minY_2 << ", maxY_2 = " << maxY_2 << std::endl;
 
 		if( maxY_1 < minY_2 )
 		{
 			if( minY_2 - maxY_1 >= 0.5 )
 			{
 				float angle = atan( ((minY_2 + maxY_1)/2) / minX_1 );
-				_diretion = angle * 3.14159 / 180;
+                if(angle >= 15)
+                    _diretion = angle * 3.14159 / 180;
+                else
+                    _diretion = 0;
 
 				float diff = (minY_2 - maxY_1) / 2;
 				_distance = fabs( diff * diff + minX_1 * minX_1 );
@@ -77,7 +84,7 @@ GetDirectionFromCloud_v2::GetDirectionFromCloud_v2(pcl::PointCloud<pcl::PointXYZ
 			else
 			{
 				int dir = ( (minY_2 + maxY_1) / 2 ) >= 0 ? -1 : 1; 
-				_diretion = dir * 30 * 3.14159 / 180;
+				_diretion = dir * 45 * 3.14159 / 180;
 				_distance = 0;
 			}
 		}
@@ -86,7 +93,10 @@ GetDirectionFromCloud_v2::GetDirectionFromCloud_v2(pcl::PointCloud<pcl::PointXYZ
 			if( minY_1 - maxY_2 >= 0.5 )
 			{
 				float angle = atan( ((minY_1 + maxY_2) / 2 ) / minX_2 );
-				_diretion = angle * 3.14159 / 180;
+				if(angle >= 15)
+                    _diretion = angle * 3.14159 / 180;
+                else
+                    _diretion = 0;
 
 				float diff = (minY_1 - maxY_2) / 2;
 				_distance = fabs( diff * diff + minX_2 * minX_2 );
@@ -94,13 +104,13 @@ GetDirectionFromCloud_v2::GetDirectionFromCloud_v2(pcl::PointCloud<pcl::PointXYZ
 			else
 			{
 				int dir = (minY_1 + maxY_2) / 2 >= 0 ? -1 : 1; 
-				_diretion = dir * 30 * 3.14159 / 180;
+				_diretion = dir * 45 * 3.14159 / 180;
 				_distance = 0;
 			}
 		}
 		else
 		{
-			_diretion = 0.78;
+			_diretion = 1.57;
 			_distance = 0;
 		}
 	}
@@ -231,7 +241,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GetDirectionFromCloud_v2::downsampleCloud( p
     vg.setInputCloud (cloud_filtered_z);
     vg.setLeafSize (0.02f, 0.02f, 0.02f);
     vg.filter (*cloud_filtered);
-    std::cout << "PointCloud after filtering has: " << cloud_filtered->points.size ()  << " data points." << std::endl;
+    // std::cout << "PointCloud after filtering has: " << cloud_filtered->points.size ()  << " data points." << std::endl;
 
     return cloud_filtered;
 }
@@ -293,7 +303,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GetDirectionFromCloud_v2::removePlanar( pcl:
         cloud_filtered = cloud_f;
     }
 
-    std::cout << "PointCloud after remove planar size = " << cloud_filtered->points.size() << std::endl;
+    // std::cout << "PointCloud after remove planar size = " << cloud_filtered->points.size() << std::endl;
     return cloud_filtered;
 }
 
@@ -338,7 +348,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GetDirectionFromCloud_v2::clusterExtraction(
         cloud_cluster->height = 1;
         cloud_cluster->is_dense = true;
 
-        std::cout << "PointCloud representing the Cluster: " << cloud_cluster->points.size () << " data points." << std::endl;
+        // std::cout << "PointCloud representing the Cluster: " << cloud_cluster->points.size () << " data points." << std::endl;
 
         pcl::PointXYZ minPt, maxPt;
         pcl::getMinMax3D(*cloud_cluster, minPt, maxPt); 
@@ -347,7 +357,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GetDirectionFromCloud_v2::clusterExtraction(
         centerPoint.y = (minPt.y + maxPt.y) / 2;
         centerPoint.z = (minPt.z + maxPt.z) / 2;
         pointSet->points.push_back(centerPoint);
-        std::cout << j++ <<" , centerPoint x = " << centerPoint.x << ", y = " << centerPoint.y << ", z = " << centerPoint.z << std::endl;
+        // std::cout << j++ <<" , centerPoint x = " << centerPoint.x << ", y = " << centerPoint.y << ", z = " << centerPoint.z << std::endl;
 
         pcl::PointXYZ MinXMaxYPoint;
         MinXMaxYPoint.x = minPt.x;
@@ -355,9 +365,9 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GetDirectionFromCloud_v2::clusterExtraction(
         MinXMaxYPoint.z = maxPt.y;
         pointSet->points.push_back(MinXMaxYPoint);
 
-        std::cout << "     minPt x = " << minPt.x << ", y = " << minPt.y << ", z = " << minPt.z << std::endl;
-        std::cout << "     maxPt x = " << maxPt.x << ", y = " << maxPt.y << ", z = " << maxPt.z << std::endl;
-        std::cout << "     MinXMaxYPoint x = " << MinXMaxYPoint.x << ", y = " << MinXMaxYPoint.y << ", z = " << MinXMaxYPoint.z << std::endl;
+        // std::cout << "     minPt x = " << minPt.x << ", y = " << minPt.y << ", z = " << minPt.z << std::endl;
+        // std::cout << "     maxPt x = " << maxPt.x << ", y = " << maxPt.y << ", z = " << maxPt.z << std::endl;
+        // std::cout << "     MinXMaxYPoint x = " << MinXMaxYPoint.x << ", y = " << MinXMaxYPoint.y << ", z = " << MinXMaxYPoint.z << std::endl;
     }
 
     if(pointSet->points.size() >= 4 )

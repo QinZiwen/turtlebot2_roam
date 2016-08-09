@@ -49,6 +49,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 //--------------- my code begin---------------
 #include "GetDirectionFromCloud.h"
+#include "GetDirectionFromCloud_v2.h"
 #include <pcl/pcl_base.h>
 #include "rtabmap/core/util3d.h"
 #include "turtlebotMove.h"
@@ -231,9 +232,18 @@ public:
 					if(mtx.try_lock())
 					{
 						GetDirectionFromCloud gdfc(cloud);
-						direction = gdfc.getMoveDirection();
+						//direction = gdfc.getMoveDirection();
 						distance =  gdfc.getMoveDistance();
-						std::cout << ">>> direction = " << direction << ", distance = " << distance << std::endl;
+
+						GetDirectionFromCloud_v2 gdfc_v2(cloud);
+						direction = gdfc_v2.getMoveDirection();
+
+						std::cout << ">>> RGBDOdometryNode direction = " << direction << ", distance = " << distance << std::endl;
+
+						if( direction == 0 && distance == 0 )
+						{
+							direction = 0.7;
+						}
 
 						mtx.unlock();
 					}

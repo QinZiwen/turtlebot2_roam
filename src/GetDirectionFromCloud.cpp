@@ -4,7 +4,7 @@ std::atomic<bool> threadExit(false);
 
 GetDirectionFromCloud::GetDirectionFromCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr &inputCloud)
 {
-	std::cout << ">>> inputCloud size = " << inputCloud->points.size() << std::endl;
+	// std::cout << ">>> inputCloud size = " << inputCloud->points.size() << std::endl;
 	
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered_x = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered_z = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>);
@@ -30,15 +30,15 @@ GetDirectionFromCloud::GetDirectionFromCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr
 	pass_y.setFilterLimits (-0.3, 0.3);
 	pass_y.filter (*cloud_filtered);
 
-	std::cout << ">>> cloud_filtered size = " << cloud_filtered->points.size() << std::endl;
+	// std::cout << ">>> cloud_filtered size = " << cloud_filtered->points.size() << std::endl;
 
 	if(cloud_filtered->points.size() > 0)
 	{
 		//std::cout << ">>> Compute value of minPt and maxPt" << std::endl;
 		pcl::getMinMax3D(*cloud_filtered, minPt, maxPt);       //<<< get min and max
 
-	    std::cout << ">>> minPt[x,y,z] = " << minPt.x << ", " << minPt.y << ", " << minPt.z << ";" << std::endl;
-	    std::cout << ">>> maxPt[x,y,z] = " << maxPt.x << ", " << maxPt.y << ", " << maxPt.z << ";" << std::endl;
+	    // std::cout << ">>> minPt[x,y,z] = " << minPt.x << ", " << minPt.y << ", " << minPt.z << ";" << std::endl;
+	    // std::cout << ">>> maxPt[x,y,z] = " << maxPt.x << ", " << maxPt.y << ", " << maxPt.z << ";" << std::endl;
 	}
 	else
 	{

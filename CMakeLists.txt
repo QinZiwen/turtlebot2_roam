@@ -170,6 +170,7 @@ SET(rtabmap_ros_lib_src
    src/MsgConversion.cpp
    src/OdometryROS.cpp
    src/GetDirectionFromCloud.cpp
+   src/GetDirectionFromCloud_v2.cpp
    src/MapsManager.cpp
    src/turtlebotMove.cpp
 )   
