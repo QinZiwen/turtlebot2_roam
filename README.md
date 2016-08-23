@@ -1,6 +1,7 @@
 introduction
 ============
-The program based rtabmap_ros,which can control turtlebot2 roaming that not collide some obstacle and not goal.rtabmap_ros installation as follows, but You might have to modify some scripts that could be clone my code.
+* The program based rtabmap_ros,which can control turtlebot2 roaming that not collide some obstacle and not goal.
+* rtabmap_ros installation as follows, but You might have to modify some scripts that could be clone my code.
 
 rtabmap_ros
 ===========
