@@ -1,3 +1,7 @@
+introduction
+============
+The program based rtabmap_ros,which can control turtlebot2 roaming that not collide some obstacle and not goal.rtabmap_ros installation as follows, but You might have to modify some scripts that could be clone my code.
+
 rtabmap_ros
 ===========
 
@@ -71,7 +75,7 @@ $ mv /usr/local/lib/cmake/Findcvsba.cmake /usr/local/lib/cmake/cvsba/cvsbaConfig
  
  ```bash
 $ cd ~
-$ git clone https://github.com/introlab/rtabmap.git rtabmap
+$ git clone https://github.com/QinZiwen/turtlebot2_roam.git rtabmap
 $ cd rtabmap/build
 $ cmake ..  [<---double dots included]
 $ make -j4
@@ -82,7 +86,7 @@ $ sudo make install
  
  ```bash
 $ cd ~/catkin_ws
-$ git clone https://github.com/introlab/rtabmap_ros.git src/rtabmap_ros
+$ git clone https://github.com/QinZiwen/turtlebot2_roam.git src/rtabmap_ros
 $ catkin_make
 ```
 
